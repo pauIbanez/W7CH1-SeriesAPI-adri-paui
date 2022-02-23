@@ -65,7 +65,7 @@ describe("Given loginUser", () => {
   });
 
   describe("When it's passed a req and a res with username and an invalid password", () => {
-    test("Then it should call method json of res", async () => {
+    test("Then it should call next with an error with code 401 and message 'Invalid data'", async () => {
       const password = "1324";
       const salt = await bcrypt.genSalt(10);
       const hashedPassword = await bcrypt.hash(password, salt);
@@ -86,6 +86,33 @@ describe("Given loginUser", () => {
       });
 
       User.findOne = jest.fn().mockResolvedValue(databaseUser);
+
+      const next = jest.fn();
+
+      const req = {
+        body: user,
+      };
+
+      await loginUser(req, null, next);
+
+      expect(User.findOne).toHaveBeenCalledWith({ username: user.username });
+      expect(next).toHaveBeenCalledWith(expectedError);
+    });
+  });
+
+  describe("When it's passed a req and a res with a non existent username and a password", () => {
+    test("Then it should call next with an error with code 401 and message 'Invalid data'", async () => {
+      const user = {
+        username: "tydgfddh",
+        password: "12345",
+      };
+
+      const expectedError = expect.objectContaining({
+        code: 401,
+        message: "Invalid data",
+      });
+
+      User.findOne = jest.fn().mockResolvedValue(null);
 
       const next = jest.fn();
 
