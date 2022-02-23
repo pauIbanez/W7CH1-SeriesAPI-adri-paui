@@ -39,4 +39,26 @@ describe("Given loginUser", () => {
       expect(res.json).toHaveBeenCalledWith({ token });
     });
   });
+
+  describe("When it's passed a req and a res without a username", () => {
+    test("Then it should call next with an error with code 400 and message 'Username or password not provided'", async () => {
+      const password = "1234";
+      const user = {
+        password,
+      };
+
+      const req = {
+        body: user,
+      };
+
+      const expectedError = new Error("Username or password not provided");
+      expectedError.code = 400;
+
+      const next = jest.fn();
+
+      await loginUser(req, null, next);
+
+      expect(next).toHaveBeenCalledWith(expectedError);
+    });
+  });
 });
