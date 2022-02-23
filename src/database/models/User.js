@@ -18,7 +18,10 @@ const UserSchema = new Schema({
     type: Boolean,
     default: false,
   },
-  series: [SchemaTypes.ObjectId],
+  series: {
+    type: [SchemaTypes.ObjectId],
+    ref: "Serie",
+  },
 });
 
 const User = model("User", UserSchema, "users");
