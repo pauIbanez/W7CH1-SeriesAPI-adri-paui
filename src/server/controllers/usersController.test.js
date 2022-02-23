@@ -51,13 +51,51 @@ describe("Given loginUser", () => {
         body: user,
       };
 
-      const expectedError = new Error("Username or password not provided");
-      expectedError.code = 400;
+      const expectedError = expect.objectContaining({
+        code: 400,
+        message: "Username or password not provided",
+      });
 
       const next = jest.fn();
 
       await loginUser(req, null, next);
 
+      expect(next).toHaveBeenCalledWith(expectedError);
+    });
+  });
+
+  describe("When it's passed a req and a res with username and an invalid password", () => {
+    test("Then it should call method json of res", async () => {
+      const password = "1324";
+      const salt = await bcrypt.genSalt(10);
+      const hashedPassword = await bcrypt.hash(password, salt);
+
+      const user = {
+        username: "paquito",
+        password: "12345",
+      };
+
+      const databaseUser = {
+        username: "paquito",
+        password: hashedPassword,
+      };
+
+      const expectedError = expect.objectContaining({
+        code: 401,
+        message: "Invalid data",
+      });
+
+      User.findOne = jest.fn().mockResolvedValue(databaseUser);
+
+      const next = jest.fn();
+
+      const req = {
+        body: user,
+      };
+
+      await loginUser(req, null, next);
+
+      expect(User.findOne).toHaveBeenCalledWith({ username: user.username });
       expect(next).toHaveBeenCalledWith(expectedError);
     });
   });
