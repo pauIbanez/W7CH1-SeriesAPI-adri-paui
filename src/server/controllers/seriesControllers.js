@@ -6,7 +6,7 @@ const listAllSeries = async (req, res, next) => {
   let errorMessage = "User not found";
   try {
     const user = await User.findById(id);
-    errorMessage = "Series not fkound in the database";
+    errorMessage = "Series not found in the database";
     const userSerires = await Serie.find({ id: { $in: user.series } });
     res.json({ series: userSerires });
   } catch (error) {

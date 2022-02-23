@@ -26,6 +26,7 @@ app.use(helmet());
 app.use(express.json());
 
 app.use("/users", usersRouter);
+
 app.use("/series", seriesRouter);
 
 app.use(notFoundError);
