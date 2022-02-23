@@ -3,6 +3,7 @@ const morgan = require("morgan");
 const cors = require("cors");
 const { default: helmet } = require("helmet");
 const mongoose = require("mongoose");
+const usersRouter = require("./routers/usersRouter");
 
 const app = express();
 
@@ -17,9 +18,11 @@ mongoose.set("toJSON", {
   },
 });
 
+app.use(cors());
 app.use(morgan("dev"));
 app.use(helmet());
 app.use(express.json());
-app.use(cors());
+
+app.use("/users", usersRouter);
 
 module.exports = app;
