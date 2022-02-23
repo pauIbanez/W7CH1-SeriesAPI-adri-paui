@@ -5,9 +5,9 @@ const User = require("../../database/models/User");
 const secret = process.env.TOKEN_SECRET;
 
 const createUser = async (req, res, next) => {
-  const { name, username, password, admin } = req.body;
-  if (!name || !username || !password || !admin) {
-    const error = new Error("Not all fields are filled");
+  const { name, username, password } = req.body;
+  if (!name || !username || !password) {
+    const error = new Error("Please fill the blank fields");
     error.code = 400;
     next(error);
     return;
@@ -15,7 +15,7 @@ const createUser = async (req, res, next) => {
   try {
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
-    await User.create({ name, username, hashedPassword, admin });
+    await User.create({ name, username, hashedPassword });
     res.status(201).json({ name, username });
   } catch (error) {
     error.code = 409;
