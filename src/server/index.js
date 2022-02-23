@@ -4,6 +4,7 @@ const cors = require("cors");
 const { default: helmet } = require("helmet");
 const mongoose = require("mongoose");
 const usersRouter = require("./routers/usersRouter");
+const { notFoundError, generalPete } = require("./middlewares/errors");
 
 const app = express();
 
@@ -24,5 +25,8 @@ app.use(helmet());
 app.use(express.json());
 
 app.use("/users", usersRouter);
+
+app.use(notFoundError);
+app.use(generalPete);
 
 module.exports = app;

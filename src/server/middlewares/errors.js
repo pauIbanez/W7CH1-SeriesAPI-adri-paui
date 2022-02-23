@@ -4,7 +4,7 @@ const notFoundError = (req, res) => {
 
 // eslint-disable-next-line no-unused-vars
 const generalPete = (err, req, res, next) => {
-  res.status(err.code).json(err.message);
+  res.status(err.code || 500).json({ error: err.message || "general pete" });
 };
 
 module.exports = { notFoundError, generalPete };
