@@ -70,4 +70,29 @@ describe("Given a listAllSeries controller", () => {
       expect(next).toHaveBeenCalledWith(expectedError);
     });
   });
+
+  describe("When it receives a req with user whith 2 series id' but none are in the db", () => {
+    test("Then it should call json of res with an empty array", async () => {
+      const res = {
+        json: jest.fn(),
+      };
+
+      const user = {
+        id: "2",
+        username: "username",
+        password: "password",
+        series: ["4", "thisASerie"],
+      };
+
+      const req = {
+        user,
+      };
+
+      User.findById = jest.fn().mockResolvedValue(user);
+      Serie.find = jest.fn().mockResolvedValue(null);
+      await listAllSeries(req, res);
+
+      expect(res.json).toHaveBeenCalledWith({ series: [] });
+    });
+  });
 });
