@@ -7,7 +7,7 @@ const secret = process.env.TOKEN_SECRET;
 const createUser = async (req, res, next) => {
   const { name, username, password } = req.body;
   if (!name || !username || !password) {
-    const error = new Error("Not all fields are filled");
+    const error = new Error("Please fill the blank fields");
     error.code = 400;
     next(error);
     return;
