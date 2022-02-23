@@ -28,9 +28,9 @@ const loginUser = async (req, res, next) => {
   const { username, password } = req.body;
 
   if (!username || !password) {
-    const error = new Error("Username or password not provided");
-    error.code = 400;
-    next(error);
+    const eror = new Error("Username or password not provided");
+    eror.code = 400;
+    next(eror);
     return;
   }
 
