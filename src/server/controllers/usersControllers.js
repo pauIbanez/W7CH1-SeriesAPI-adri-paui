@@ -16,7 +16,7 @@ const createUser = async (req, res, next) => {
   }
 };
 
-const loginUser = async (res, req, next) => {
+const loginUser = async (req, res, next) => {
   const { username, password } = req.body;
 
   if (!username || !password) {
