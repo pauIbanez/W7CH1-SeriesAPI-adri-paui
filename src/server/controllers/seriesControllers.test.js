@@ -8,7 +8,7 @@ describe("Given a listAllSeries controller", () => {
   beforeEach(() => {
     jest.resetAllMocks();
   });
-  describe("When it receives a req with a 'user' whith 2 series id's", () => {
+  describe("When it receives a req with a user whith 2 series id's", () => {
     test("Then it should call json with the found series", async () => {
       const res = {
         json: jest.fn(),
@@ -36,11 +36,38 @@ describe("Given a listAllSeries controller", () => {
         },
       ];
 
-      User.create = jest.fn().mockResolvedValue(user);
+      User.findById = jest.fn().mockResolvedValue(user);
       Serie.find = jest.fn().mockResolvedValue(series);
       await listAllSeries(req, res);
 
       expect(res.json).toHaveBeenCalledWith({ series });
+    });
+  });
+
+  describe("When it receives a req with a non existent user", () => {
+    test("Then it should call next with the message 'User not found'", async () => {
+      const user = {
+        id: "2",
+        username: "username",
+        password: "password",
+        series: ["4", "thisASerie"],
+      };
+
+      const req = {
+        user,
+      };
+
+      const expectedError = expect.objectContaining({
+        message: "User not found",
+        code: 404,
+      });
+      const next = jest.fn();
+
+      User.create = jest.fn().mockResolvedValue(user);
+
+      await listAllSeries(req, null, next);
+
+      expect(next).toHaveBeenCalledWith(expectedError);
     });
   });
 });

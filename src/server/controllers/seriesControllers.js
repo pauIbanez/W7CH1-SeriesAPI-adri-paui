@@ -3,16 +3,25 @@ const User = require("../../database/models/User");
 
 const listAllSeries = async (req, res, next) => {
   const { id } = req.user;
-  let errorMessage = "User not found";
+
   try {
     const user = await User.findById(id);
-    errorMessage = "Series not found in the database";
+    if (!user) {
+      const error = new Error("User not found");
+      error.code = 404;
+      next(error);
+      return;
+    }
+
     const userSerires = await Serie.find({ id: { $in: user.series } });
+    if (!userSerires) {
+      const error = new Error("Series not found in the database");
+      error.code = 404;
+      next(error);
+      return;
+    }
     res.json({ series: userSerires });
   } catch (error) {
-    const newError = { ...error };
-    newError.code = 404;
-    newError.message = errorMessage;
     next(error);
   }
 };
