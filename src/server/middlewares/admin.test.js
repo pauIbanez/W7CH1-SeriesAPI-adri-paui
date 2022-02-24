@@ -23,4 +23,30 @@ describe("Given admin", () => {
       expect(next).toHaveBeenCalledWith();
     });
   });
+
+  describe("When it's passed a request with a user id of a user that is not an admin", () => {
+    test("Then it should call next with an error with message 'Admin acces required'", async () => {
+      const next = jest.fn();
+      const req = {
+        user: {
+          id: "invalidId",
+        },
+      };
+      const user = {
+        name: "asdasdas",
+        id: "adminId",
+      };
+
+      const expectedError = expect.objectContaining({
+        code: 401,
+        message: "Admin acces required",
+      });
+
+      User.findById = jest.fn().mockResolvedValue(user);
+
+      await admin(req, null, next);
+
+      expect(next).toHaveBeenCalledWith(expectedError);
+    });
+  });
 });
