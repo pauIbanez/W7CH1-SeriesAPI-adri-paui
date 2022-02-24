@@ -39,7 +39,8 @@
     "collectCoverageFrom": [
       "src/**/*.js",
       "!src/database/index.js",
-      "!src/index.js"
+      "!src/index.js",
+      "!src/server/initializeServer.js"
     ]
   }
 }
