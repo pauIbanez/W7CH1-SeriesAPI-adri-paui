@@ -34,5 +34,12 @@
     "morgan": "^1.10.0",
     "nodemon": "^2.0.15",
     "supertest": "^6.2.2"
+  },
+  "jest": {
+    "collectCoverageFrom": [
+      "src/**/*.js",
+      "!src/database/index.js",
+      "!src/index.js"
+    ]
   }
 }
