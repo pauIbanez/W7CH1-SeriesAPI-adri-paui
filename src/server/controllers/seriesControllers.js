@@ -20,4 +20,16 @@ const listAllSeries = async (req, res, next) => {
   res.json({ series: userSerires });
 };
 
-module.exports = { listAllSeries };
+const createSerie = async (req, res, next) => {
+  try {
+    const newSerie = req.body;
+    const createdSerie = await Serie.create(newSerie);
+    res.status(201).json(createdSerie);
+  } catch (error) {
+    const newError = new Error("Invalid serie");
+    newError.code = 400;
+    next(newError);
+  }
+};
+
+module.exports = { listAllSeries, createSerie };
