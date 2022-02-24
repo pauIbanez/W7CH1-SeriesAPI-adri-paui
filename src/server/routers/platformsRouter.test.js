@@ -75,4 +75,36 @@ describe("Given a /platforms endpoint", () => {
       expect(body).toEqual(errorMessage);
     });
   });
+
+  describe("When it receives a POST request with a 'platform' and valid token", () => {
+    test("Then it should respond with json with the new platform and status 201", async () => {
+      const url = "/platforms";
+      const platform = { name: "HBO" };
+
+      const { body } = await request(app)
+        .post(url)
+        .send(platform)
+        .set("Authorization", `Bearer ${token}`)
+        .expect(201);
+
+      expect(body).toHaveProperty("name", "HBO");
+    });
+  });
+
+  describe("When it receives a POST request with a 'platform' and wrong token", () => {
+    test("Then it should respond with json with an error message 'Wrong token'", async () => {
+      const url = "/platforms";
+      const platform = { name: "HBO" };
+      const wrongToken = "sfddsv";
+      const errorMessage = { error: "Wrong token" };
+
+      const { body } = await request(app)
+        .post(url)
+        .send(platform)
+        .set("Authorization", `Bearer ${wrongToken}`)
+        .expect(401);
+
+      expect(body).toEqual(errorMessage);
+    });
+  });
 });
