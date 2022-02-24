@@ -11,6 +11,6 @@ const PlatformSchema = new Schema({
   },
 });
 
-const Platform = model("Platform", PlatformSchema, "platform");
+const Platform = model("Platform", PlatformSchema, "platforms");
 
 module.exports = Platform;
