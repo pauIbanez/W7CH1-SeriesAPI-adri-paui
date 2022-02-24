@@ -1,9 +1,9 @@
 const User = require("../../database/models/User");
 
-const admin = (req, res, next) => {
+const admin = async (req, res, next) => {
   const { user } = req;
 
-  const foundUser = User.findById(user.id);
+  const foundUser = await User.findById(user.id);
   if (!foundUser) {
     next({});
     return;
