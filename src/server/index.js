@@ -6,6 +6,7 @@ const mongoose = require("mongoose");
 const usersRouter = require("./routers/usersRouter");
 const seriesRouter = require("./routers/seriesRouter");
 const { notFoundError, generalPete } = require("./middlewares/errors");
+const { auth } = require("./middlewares/auth");
 
 const app = express();
 
@@ -27,7 +28,7 @@ app.use(express.json());
 
 app.use("/users", usersRouter);
 
-app.use("/series", seriesRouter);
+app.use("/series", auth, seriesRouter);
 
 app.use(notFoundError);
 app.use(generalPete);
