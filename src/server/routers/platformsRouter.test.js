@@ -24,7 +24,12 @@ afterAll(async () => {
 });
 
 beforeEach(async () => {
-  const user = { name: "roboto", username: "robot", password: "roberto" };
+  const user = {
+    name: "roboto",
+    username: "robot",
+    password: "roberto",
+    admin: true,
+  };
   const salt = await bcrypt.genSalt(10);
   const hashedPassword = await bcrypt.hash(user.password, salt);
 
@@ -32,6 +37,7 @@ beforeEach(async () => {
     name: "roboto",
     username: "robot",
     password: hashedPassword,
+    admin: true,
   });
 
   const { body } = await request(app).post("/users/login").send(user);
