@@ -11,9 +11,9 @@ const createPlatform = async (req, res, next) => {
     const createdPlatform = await Platform.create(newPlatform);
     res.status(201).json(createdPlatform);
   } catch (error) {
-    const newError = { ...error };
+    const newError = new Error("Invalid platform");
     newError.code = 400;
-    next(error);
+    next(newError);
   }
 };
 module.exports = { getAllPlatforms, createPlatform };

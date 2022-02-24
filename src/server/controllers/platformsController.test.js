@@ -54,10 +54,34 @@ describe("Given a createPlatform controller", () => {
       Platform.create = jest.fn().mockResolvedValue(platform);
       await createPlatform(req, res);
 
-      await getAllPlatforms(null, res);
-
       expect(Platform.create).toHaveBeenCalled();
       expect(res.json).toHaveBeenCalledWith(platform);
+    });
+  });
+
+  describe("When it receives an invalid platform as body in req", () => {
+    test("Then it should call next with an error with code 400 and message 'Invalid platform'", async () => {
+      const expectedError = expect.objectContaining({
+        message: "Invalid platform",
+        code: 400,
+      });
+
+      const platform = {
+        name: "Netflix",
+        series: ["me", "encanta", "testear"],
+      };
+
+      const req = {
+        body: platform,
+      };
+
+      const next = jest.fn();
+
+      Platform.create = jest.fn().mockRejectedValue();
+      await createPlatform(req, null, next);
+
+      expect(Platform.create).toHaveBeenCalled();
+      expect(next).toHaveBeenCalledWith(expectedError);
     });
   });
 });
