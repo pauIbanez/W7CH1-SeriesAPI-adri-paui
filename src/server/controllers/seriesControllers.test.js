@@ -1,6 +1,6 @@
 const Serie = require("../../database/models/Serie");
 const User = require("../../database/models/User");
-const { listAllSeries } = require("./seriesControllers");
+const { listAllSeries, createSerie } = require("./seriesControllers");
 
 jest.mock("../../database/models/User");
 
@@ -93,6 +93,58 @@ describe("Given a listAllSeries controller", () => {
       await listAllSeries(req, res);
 
       expect(res.json).toHaveBeenCalledWith({ series: [] });
+    });
+  });
+});
+
+describe("Given a createSerie controller", () => {
+  beforeEach(() => {
+    jest.resetAllMocks();
+  });
+  describe("When it receives 'serie' as body in req", () => {
+    test("Then it should call method json with the created serie and a status 201", async () => {
+      const res = {
+        json: jest.fn(),
+      };
+      const status = jest.fn().mockReturnValue(res);
+      res.status = status;
+      const serie = {
+        name: "GoT",
+      };
+
+      const req = {
+        body: serie,
+      };
+      Serie.create = jest.fn().mockResolvedValue(serie);
+      await createSerie(req, res);
+
+      expect(Serie.create).toHaveBeenCalled();
+      expect(res.json).toHaveBeenCalledWith(serie);
+    });
+  });
+
+  describe("When it receives an invalid serie as body in req", () => {
+    test("Then it should call next with an error with code 400 and message 'Invalid serie'", async () => {
+      const expectedError = expect.objectContaining({
+        message: "Invalid serie",
+        code: 400,
+      });
+
+      const serie = {
+        name: "GoT",
+      };
+
+      const req = {
+        body: serie,
+      };
+
+      const next = jest.fn();
+
+      Serie.create = jest.fn().mockRejectedValue();
+      await createSerie(req, null, next);
+
+      expect(Serie.create).toHaveBeenCalled();
+      expect(next).toHaveBeenCalledWith(expectedError);
     });
   });
 });
