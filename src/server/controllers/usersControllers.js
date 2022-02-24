@@ -15,7 +15,7 @@ const createUser = async (req, res, next) => {
   try {
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
-    await User.create({ name, username, hashedPassword });
+    await User.create({ name, username, password: hashedPassword });
     res.status(201).json({ name, username });
   } catch (error) {
     error.code = 409;
