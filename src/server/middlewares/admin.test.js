@@ -49,4 +49,23 @@ describe("Given admin", () => {
       expect(next).toHaveBeenCalledWith(expectedError);
     });
   });
+
+  describe("When it's passed a request with a user id of a non existent user", () => {
+    test("Then it should call next with an empty object", async () => {
+      const next = jest.fn();
+      const req = {
+        user: {
+          id: "invalidId",
+        },
+      };
+
+      const expectedError = {};
+
+      User.findById = jest.fn().mockResolvedValue(null);
+
+      await admin(req, null, next);
+
+      expect(next).toHaveBeenCalledWith(expectedError);
+    });
+  });
 });
