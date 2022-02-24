@@ -30,7 +30,6 @@ beforeEach(async () => {
     username: user.username,
     password: hashedPassword,
   });
-  console.log("user created");
 });
 
 afterEach(async () => {
@@ -43,16 +42,56 @@ afterAll(async () => {
 });
 
 describe("Given /users/login endpoint", () => {
-  describe("When it recieves a requeist with everything ok", () => {
+  describe("When it recieves a request with everything ok", () => {
     test("Then it should return a token", async () => {
       const userToSend = {
         username: user.username,
         password: user.password,
       };
-      await request(app)
-        .post("/users/login")
-        .send({ username: user.username, password: "1234" })
-        .expect(200);
+      const {
+        body: { token },
+      } = await request(app).post("/users/login").send(userToSend).expect(200);
+
+      expect(token).toBeTruthy();
+    });
+  });
+
+  describe("When it recieves a request without username or password", () => {
+    test("Then it should return 400 with error message 'Invalid data'", async () => {
+      const userToSend = {};
+      const {
+        body: { error },
+      } = await request(app).post("/users/login").send(userToSend).expect(400);
+
+      expect(error).toBe("Username or password not provided");
+    });
+  });
+
+  describe("When it recieves a requeist without an invalid username", () => {
+    test("Then it should return 401 with error message 'Invalid data'", async () => {
+      const userToSend = {
+        username: "asdasd",
+        password: "xd",
+      };
+      const {
+        body: { error },
+      } = await request(app).post("/users/login").send(userToSend).expect(401);
+
+      expect(error).toBe("Invalid data");
+    });
+  });
+
+  describe("When it recieves a requeist without an invalid password", () => {
+    test("Then it should return 401 with error message 'Invalid data'", async () => {
+      const userToSend = {
+        username: user.username,
+        password: "xd",
+      };
+      const {
+        body: { error },
+      } = await request(app).post("/users/login").send(userToSend).expect(401);
+
+      expect(error).toBe("Invalid data");
     });
   });
 });
