@@ -6,6 +6,7 @@ const usersRouter = require("./routers/usersRouter");
 const seriesRouter = require("./routers/seriesRouter");
 const { notFoundError, generalPete } = require("./middlewares/errors");
 const { auth } = require("./middlewares/auth");
+const platformsRouter = require("./routers/platformsRouter");
 
 const app = express();
 
@@ -17,6 +18,7 @@ app.use(express.json());
 app.use("/users", usersRouter);
 
 app.use("/series", auth, seriesRouter);
+app.use("/platforms", auth, platformsRouter);
 
 app.use(notFoundError);
 app.use(generalPete);
